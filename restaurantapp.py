@@ -8,7 +8,7 @@ import seaborn as sns
 # Load dataset
 @st.cache_data
 def load_data():
-    df = pd.read_csv("Dataset .csv")
+    df = pd.read_csv("https://raw.githubusercontent.com/mirsakhawathossain/restaurant-app/refs/heads/main/Dataset%20.csv")
     return df
 
 df = load_data()

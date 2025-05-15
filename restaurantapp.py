@@ -2,7 +2,8 @@
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Load dataset
 @st.cache_data
@@ -32,39 +33,39 @@ st.dataframe(filtered_df.head(20))
 
 # Cuisine Distribution
 st.subheader("Cuisine Distribution")
-cuisine_counts = filtered_df['Cuisines'].value_counts().nlargest(10)
-fig1 = px.bar(cuisine_counts, x=cuisine_counts.index, y=cuisine_counts.values,
-              labels={'x': 'Cuisine', 'y': 'Count'}, title="Top 10 Cuisines")
-st.plotly_chart(fig1)
+top_cuisines = filtered_df['Cuisines'].value_counts().nlargest(10)
+fig, ax = plt.subplots()
+sns.barplot(x=top_cuisines.values, y=top_cuisines.index, ax=ax)
+ax.set_xlabel("Count")
+ax.set_title("Top 10 Cuisines")
+st.pyplot(fig)
 
 # City Distribution
 st.subheader("Top Cities by Restaurant Count")
-city_counts = filtered_df['City'].value_counts().nlargest(10)
-fig2 = px.bar(city_counts, x=city_counts.index, y=city_counts.values,
-              labels={'x': 'City', 'y': 'Count'}, title="Top 10 Cities")
-st.plotly_chart(fig2)
+top_cities = filtered_df['City'].value_counts().nlargest(10)
+fig, ax = plt.subplots()
+sns.barplot(x=top_cities.values, y=top_cities.index, ax=ax)
+ax.set_xlabel("Count")
+ax.set_title("Top 10 Cities")
+st.pyplot(fig)
 
-# Average Cost for Two
+# Average Cost for Two by Cuisine
 st.subheader("Average Cost for Two by Cuisine")
 avg_cost = filtered_df.groupby('Cuisines')['Average Cost for two'].mean().nlargest(10)
-fig3 = px.bar(avg_cost, x=avg_cost.index, y=avg_cost.values,
-              labels={'x': 'Cuisine', 'y': 'Avg Cost for Two'}, title="Top 10 Expensive Cuisines")
-st.plotly_chart(fig3)
+fig, ax = plt.subplots()
+sns.barplot(x=avg_cost.values, y=avg_cost.index, ax=ax)
+ax.set_xlabel("Average Cost for Two")
+ax.set_title("Top 10 Expensive Cuisines")
+st.pyplot(fig)
 
-# Ratings
+# Ratings Distribution
 st.subheader("Ratings Distribution")
-fig4 = px.histogram(filtered_df, x='Aggregate rating', nbins=20, title="Aggregate Ratings Histogram")
-st.plotly_chart(fig4)
-
-# Map
-st.subheader("Restaurant Locations")
-fig5 = px.scatter_mapbox(filtered_df.dropna(subset=['Latitude', 'Longitude']),
-                         lat="Latitude", lon="Longitude", hover_name="Restaurant Name",
-                         color="Aggregate rating", size="Votes", zoom=1,
-                         mapbox_style="carto-positron", title="Restaurants on Map")
-st.plotly_chart(fig5)
+fig, ax = plt.subplots()
+sns.histplot(filtered_df['Aggregate rating'], bins=20, kde=False, ax=ax)
+ax.set_xlabel("Aggregate Rating")
+ax.set_title("Aggregate Ratings Histogram")
+st.pyplot(fig)
 
 # Footer
 st.markdown("---")
-st.markdown("Made with ❤️ using Streamlit")
-
+st.markdown("Made with ❤️ using Streamlit, Matplotlib & Seaborn")
